@@ -1,9 +1,11 @@
 package br.com.edu.controller;
 
-import br.com.edu.model.Person;
+import br.com.edu.data.dto.v1.PersonDTO;
+import br.com.edu.data.dto.v2.PersonDTOV2;
 import br.com.edu.service.PersonServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,46 +17,45 @@ public class PersonController {
     @Autowired
     private PersonServices personServices;
 
-    @RequestMapping(value = "/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public Person findById(@PathVariable("id") String id) {
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonDTO findById(@PathVariable("id") Long id) {
         return personServices.findById(id);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public List<Person> findAll() {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PersonDTO> findAll() {
         return personServices.findAll();
     }
 
-    @RequestMapping(
-            method = RequestMethod.POST,
+    @PostMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public Person create(@RequestBody Person person) {
+    public PersonDTO create(@RequestBody PersonDTO person) {
         return personServices.create(person);
     }
 
-    @RequestMapping(
-            method = RequestMethod.PUT,
+    @PostMapping(
+            value = "/v2",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public Person update(@RequestBody Person person) {
+    public PersonDTOV2 create(@RequestBody PersonDTOV2 person) {
+        return personServices.createV2(person);
+    }
+
+    @PutMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public PersonDTO update(@RequestBody PersonDTO person) {
         return personServices.update(person);
     }
 
-    @RequestMapping(
-            value = "/{id}",
-            method = RequestMethod.DELETE
-    )
-    public void delete(@PathVariable("id") String id) {
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         personServices.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
