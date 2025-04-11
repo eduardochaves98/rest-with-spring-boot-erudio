@@ -3,8 +3,6 @@ package br.com.edu.service;
 import br.com.edu.Exceptions.ResourceNotFoundException;
 
 import br.com.edu.data.dto.v1.PersonDTO;
-import br.com.edu.data.dto.v2.PersonDTOV2;
-import br.com.edu.mapper.custom.PersonMapper;
 import br.com.edu.model.Person;
 import br.com.edu.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +22,6 @@ public class PersonServices {
     @Autowired
     PersonRepository repository;
 
-    @Autowired
-    PersonMapper mapper;
-
     public PersonDTO findById(Long id) {
         logger.info("Finding one person!");
         return parseObject(repository.findById(id)
@@ -42,11 +37,6 @@ public class PersonServices {
         logger.info("Creating one person!");
 
         return parseObject(repository.save(parseObject(person, Person.class)), PersonDTO.class);
-    }
-
-    public PersonDTOV2 createV2(PersonDTOV2 person) {
-        logger.info("Creating one person!");
-        return mapper.convertEntityToDTO(repository.save(mapper.converDTOToEntity(person)));
     }
 
     public PersonDTO update(PersonDTO person) {
